@@ -18,6 +18,7 @@ water that might be there,
 sun that might be shining,
 which cells are neighbors to it (left, right, top, bottom)
 """
+import random # to get randomised situation 
 
 class World:
     def __init__(self, name, size_x, size_y, total_rounds, probabilities):
