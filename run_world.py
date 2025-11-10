@@ -28,11 +28,20 @@ class World:
         self.total_rounds = total_rounds
         self.sun = probabilities[0]
         self.rain = probabilities[1]
-        self.round = 0 # set the initial round to 0, it is night 
+        self.round = 0 # set the initial round to 0, it is night or day? 
+        self.grid = self.create_grid() # call function from class 
 
     def introduction(self): 
         print(f"Welcome! This is a simulation of the world '{self.name}'")
-        
+    
+    def create_grid(self):
+        grid = []
+        i = int(0)
+        for i in range(self.size_x):
+            grid.append("_")
+        for i in range(self.size_y):
+            print(grid)
+
     def temporal(self): 
         if self.round % 2 == 0: 
             print(f"Round {self.round}: It's night!")
@@ -45,36 +54,39 @@ class World:
             self.temporal()
         else: 
            print("The final round is complete. End of simulation.")
-
-probabilities = [0.6, 0.4]
-my_world = World(name = "Shire", size_x=10, size_y=10, total_rounds=5, probabilities=probabilities)
-my_world.introduction()
-my_world.next_round()
-my_world.next_round()
-my_world.next_round()
-my_world.next_round()
-my_world.next_round()
-my_world.next_round()
+    
+    def day(self):
+        pass
 
 
 class Cell: 
-  def __init__(self, x, y):
-    self.x = x
-    self.y = y
-    self.sun = False 
-    self.rain = False
-    self.wet = False
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+        self.sun = False 
+        self.rain = False
+        self.wet = False
     
+    def sun_shining(self, probability):
+        self.sun = random.random() < probability[0]
+    
+    def raining (self, probability):
+        if self.sun == False:
+            self.rain = random.random() < probability[1]
+            if self.rain:
+                self.wet = True 
+        else:
+            pass
+
     def weather(self):
-        self.sun = my_world.sun
-        if my_world.round % 2 == 0:
-            print("It is night. There is no sun nor rain.") # could later have it rain at night? 
-        else: 
-            if self.sun == False:
-                self.rain = True 
-                print("It is raining.")
-            else:
-                print("The sun is shining.")
+        if (self.sun and self.rain):
+            print("The sun is shining and it is raining! A miracle!")
+        elif self.sun: 
+            print("The sun is shining.")
+        elif self.rain:
+            print("It is raining.")
+        else:
+            print("Nothing is happening?")
 
     def is_wet(self):
         if self.wet == False: 
@@ -83,3 +95,14 @@ class Cell:
             print("The cell has dried.")
         else: 
             print("The cell is and remains wet.")
+
+probabilities = [0.6, 0.4]
+my_world = World(name = "Shire", size_x=3, size_y=3, total_rounds=5, 
+                 probabilities=probabilities)
+my_world.introduction()
+my_world.next_round()
+my_world.next_round()
+my_world.next_round()
+my_world.next_round()
+my_world.next_round()
+my_world.next_round()
