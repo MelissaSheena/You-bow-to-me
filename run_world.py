@@ -20,40 +20,65 @@ which cells are neighbors to it (left, right, top, bottom)
 """
 
 class World:
-    def __init__(self, size_x, size_y, total_rounds):
+    def __init__(self, name, size_x, size_y, total_rounds, probabilities):
+        self.name = name
         self.size_x = size_x
         self.size_y = size_y
         self.total_rounds = total_rounds
+        self.sun = probabilities[0]
+        self.rain = probabilities[1]
+        self.round = 0 # set the initial round to 0, it is night 
 
-        self.round = 0 # set the initial round to 0 
-
+    def introduction(self): 
+        print(f"Welcome! This is a simulation of the world '{self.name}'")
+        
     def temporal(self): 
         if self.round % 2 == 0: 
-            print("It's day!")
+            print(f"Round {self.round}: It's night!")
         else: 
-            print("It's night")
+            print(f"Round {self.round}: It's day!")
 
     def next_round(self):
         if self.round < self.total_rounds:
-            self.temporal() # print if day or night; print before incremention? how can i have a round 0? 
             self.round += 1 # increase 
+            self.temporal()
         else: 
            print("The final round is complete. End of simulation.")
 
-my_world = World(size_x=10, size_y=10, total_rounds=5)
+probabilities = [0.6, 0.4]
+my_world = World(name = "Shire", size_x=10, size_y=10, total_rounds=5, probabilities=probabilities)
+my_world.introduction()
+my_world.next_round()
+my_world.next_round()
+my_world.next_round()
 my_world.next_round()
 my_world.next_round()
 my_world.next_round()
 
-class Weather: 
-  def __init__(self, time, sun, rain):
-    self.time = time
-    self.sun = sun
-    self.rain = rain
 
 class Cell: 
-  def __init__(self, x, y, wet, sun, rain):
-    # x and y position 
-    # wet, sun, rain - boolean 
-    pass
+  def __init__(self, x, y):
+    self.x = x
+    self.y = y
+    self.sun = False 
+    self.rain = False
+    self.wet = False
+    
+    def weather(self):
+        self.sun = my_world.sun
+        if my_world.round % 2 == 0:
+            print("It is night. There is no sun nor rain.") # could later have it rain at night? 
+        else: 
+            if self.sun == False:
+                self.rain = True 
+                print("It is raining.")
+            else:
+                print("The sun is shining.")
 
+    def is_wet(self):
+        if self.wet == False: 
+            print("The cell is dry.")
+        elif (self.wet == True and self.sun == True):
+            print("The cell has dried.")
+        else: 
+            print("The cell is and remains wet.")
